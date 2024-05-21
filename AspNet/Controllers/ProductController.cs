@@ -1,6 +1,6 @@
 ﻿using AspNet.DataAccess;
 using AspNet.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +17,8 @@ namespace AspNet.Controllers
         }
 
         [HttpGet("Products")]
+        [Authorize(Roles = "user,admin")]
+
         public IActionResult Get()
         {
             var products = _context.Products.ToList();
@@ -24,6 +26,8 @@ namespace AspNet.Controllers
         }
 
         [HttpGet("Product/{id}")]
+        [Authorize(Roles = "user,admin")]
+
         public IActionResult GetProduct([FromRoute]int id) 
         {
             var product = _context.Products.FirstOrDefault(p => p.Id == id);
@@ -35,6 +39,8 @@ namespace AspNet.Controllers
 
 
         [HttpPost("Products")]
+        [Authorize(Roles = "admin")]
+
         public IActionResult Save([FromBody]Product product)
         {
             _context.Products.Add(product);
@@ -43,6 +49,8 @@ namespace AspNet.Controllers
         }
 
         [HttpPut("Products")]
+        [Authorize(Roles = "admin")]
+
         public IActionResult Update([FromBody]Product product) 
         {   
             var result = _context.Products.AsNoTracking().FirstOrDefault(x => x.Id == product.Id);
@@ -58,6 +66,8 @@ namespace AspNet.Controllers
         }
 
         [HttpDelete("Products")]
+        [Authorize(Roles = "admin")]
+
         public IActionResult Delete([FromQuery]int id)
         {
             var deleteProduct = _context.Products.AsNoTracking().FirstOrDefault(x => x.Id == id);
